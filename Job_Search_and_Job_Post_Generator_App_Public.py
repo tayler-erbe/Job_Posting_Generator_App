@@ -41,7 +41,7 @@ def retrieve_similar_jobs_bert(new_job_summary, faiss_index, bert_model, top_k=5
     return similar_jobs
 
 # Streamlit App
-st.title("Job Search App")
+st.title("BERT and FAISS-Powered Job Search and Matching Tool")
 
 # User Input for Job Query
 user_query = st.text_input("Enter a job query (e.g., 'I need an accountant with 4 years of experience'): ")
