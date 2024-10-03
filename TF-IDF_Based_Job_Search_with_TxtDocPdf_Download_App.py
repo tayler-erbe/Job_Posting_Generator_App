@@ -5,7 +5,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import io
 from docx import Document  # For generating Word document
-from fpdf import FPDF  # For generating PDF
 
 # Load the job content data from your GitHub repository
 url_csv = "https://raw.githubusercontent.com/tayler-erbe/Job_Posting_Generator_App/main/job_content.csv"
@@ -54,19 +53,6 @@ def create_word_doc(selected_job):
     doc.add_paragraph(f"Knowledge, Skills, Abilities (KSA): {selected_job['KSA']}")
     return doc
 
-# Function to create a PDF document for download
-def create_pdf(selected_job):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt=selected_job['Class Title'], ln=True, align='C')
-    pdf.ln(10)
-    pdf.multi_cell(0, 10, f"Job Duties: {selected_job['Job Duties']}")
-    pdf.multi_cell(0, 10, f"Minimum Qualifications: {selected_job['MAQ']}")
-    pdf.multi_cell(0, 10, f"Levels of Work: {selected_job['Levels Of Work']}")
-    pdf.multi_cell(0, 10, f"Knowledge, Skills, Abilities (KSA): {selected_job['KSA']}")
-    return pdf
-
 # Streamlit App
 st.title("TF-IDF Based Job Search App")
 
@@ -114,16 +100,4 @@ if user_query:
             data=word_buffer,
             file_name=f"{selected_job['Class Title']}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-
-        # Create a downloadable PDF
-        pdf_doc = create_pdf(selected_job)
-        pdf_buffer = io.BytesIO()
-        pdf_doc.output(pdf_buffer)
-        pdf_buffer.seek(0)
-        st.download_button(
-            label="Download as PDF",
-            data=pdf_buffer,
-            file_name=f"{selected_job['Class Title']}.pdf",
-            mime="application/pdf"
         )
