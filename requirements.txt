@@ -6,3 +6,4 @@ requests
 streamlit
 scikit-learn
 python-docx
+fpdf
