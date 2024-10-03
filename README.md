@@ -37,6 +37,16 @@ This repository contains two different job search applications, each built using
    - It uses **BERT (Bidirectional Encoder Representations from Transformers)** to generate embeddings of job descriptions and **FAISS (Facebook AI Similarity Search)** to perform fast similarity searches between user queries and jobs.
    - This model is better suited for complex, context-aware searches where understanding the relationships between terms is critical.
 
+### 6. **bert_embeddings.npy**
+   - This file contains precomputed **BERT embeddings** for the job descriptions in the dataset.
+   - BERT embeddings capture the context and semantic meaning of the text, allowing for a deeper understanding of the relationships between terms in the job descriptions and user queries.
+   - In the app, these embeddings are loaded and used with FAISS to quickly find job descriptions that are most similar to the user's query.
+
+### 7. **faiss_index.index**
+   - This file contains the pre-built **FAISS index**, which is used for fast similarity searches on the BERT embeddings.
+   - FAISS (Facebook AI Similarity Search) is a library that enables efficient similarity searches over large datasets of embeddings.
+   - The index is loaded into the app, allowing it to search for the top-k most relevant jobs based on the BERT embeddings of the user's query.
+
 ---
 
 ## Applications
