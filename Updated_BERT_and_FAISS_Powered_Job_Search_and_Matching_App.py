@@ -1,4 +1,35 @@
 
+# Import necessary libraries
+import faiss
+import numpy as np
+import pandas as pd
+import streamlit as st  # Ensure this is properly imported
+from sentence_transformers import SentenceTransformer
+import requests
+import io
+from docx import Document  # For Word document creation
+
+# Load the job content data from your GitHub repository
+url_csv = "https://raw.githubusercontent.com/tayler-erbe/Job_Posting_Generator_App/main/job_content.csv"
+job_content_df = pd.read_csv(url_csv)
+
+# Preprocess the 'Combine_String' column, filling NaN values with empty strings
+combine_strings = job_content_df['Combine_String'].fillna('')
+
+# Load the saved BERT embeddings from GitHub
+url_embeddings = "https://raw.githubusercontent.com/tayler-erbe/Job_Posting_Generator_App/main/bert_embeddings.npy"
+response = requests.get(url_embeddings)
+bert_embeddings = np.load(io.BytesIO(response.content))
+
+# Load the saved FAISS index from GitHub
+url_faiss_index = "https://raw.githubusercontent.com/tayler-erbe/Job_Posting_Generator_App/main/faiss_index.index"
+response = requests.get(url_faiss_index)
+with open("faiss_index.index", "wb") as f:
+    f.write(response.content)
+
+# Load FAISS index from the local file
+faiss_index = faiss.read_index("faiss_index.index")
+
 # Function to retrieve similar jobs using BERT embeddings and include similarity scores
 def retrieve_similar_jobs_bert(new_job_summary, faiss_index, bert_model, top_k=5):
     # Convert new job summary to BERT embedding
@@ -53,22 +84,11 @@ if user_query:
         st.write(f"**Knowledge, Skills, Abilities (KSA):** {selected_job['KSA']}")
         
         # Create a downloadable text file
-        text_output = create_text_file(selected_job)
+        text_output = f"Job Title: {selected_job['Class Title']}
+Job Duties: {selected_job['Job Duties']}"
         st.download_button(
             label="Download as Text File",
             data=text_output,
             file_name=f"{selected_job['Class Title']}.txt",
             mime="text/plain"
-        )
-        
-        # Create a downloadable Word document
-        word_doc = create_word_doc(selected_job)
-        word_buffer = io.BytesIO()
-        word_doc.save(word_buffer)
-        word_buffer.seek(0)
-        st.download_button(
-            label="Download as Word Document",
-            data=word_buffer,
-            file_name=f"{selected_job['Class Title']}.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
