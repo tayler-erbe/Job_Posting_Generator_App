@@ -84,8 +84,18 @@ if user_query:
         st.write(f"**Knowledge, Skills, Abilities (KSA):** {selected_job['KSA']}")
         
         # Create a downloadable text file
-        text_output = f"Job Title: {selected_job['Class Title']}
-Job Duties: {selected_job['Job Duties']}"
+        text_output = (
+            f"Job Title: {selected_job['Class Title']}
+"
+            f"Job Duties: {selected_job['Job Duties']}
+"
+            f"Minimum Qualifications: {selected_job['MAQ']}
+"
+            f"Levels of Work: {selected_job['Levels Of Work']}
+"
+            f"Knowledge, Skills, Abilities (KSA): {selected_job['KSA']}
+"
+        )
         st.download_button(
             label="Download as Text File",
             data=text_output,
